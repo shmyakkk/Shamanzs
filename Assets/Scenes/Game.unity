@@ -118,6 +118,8 @@ NavMeshSettings:
     manualTileSize: 0
     tileSize: 256
     accuratePlacement: 0
+    maxJobWorkers: 0
+    preserveTilesOutsideBounds: 0
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
@@ -157,7 +159,7 @@ Camera:
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 2
-  m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
+  m_BackGroundColor: {r: 0.50526184, g: 0, b: 0.9811321, a: 0}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0
@@ -174,7 +176,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 5
+  orthographic size: 70
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -203,4 +205,61 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &992808215
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 992808217}
+  - component: {fileID: 992808216}
+  m_Layer: 0
+  m_Name: Board Manager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &992808216
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 992808215}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: adc4108647e4e454fb06fdb8afc56300, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tileSprite:
+  - {fileID: 21300000, guid: 2c2fa176782d67841ab5eff930c93d97, type: 3}
+  - {fileID: 21300000, guid: de68d42c2b5d785409d0dc9e8944b4f1, type: 3}
+  - {fileID: 21300000, guid: 8713e02aef1de4e429e05ddb375ccfb2, type: 3}
+  - {fileID: 21300000, guid: 17487aad6cc72a64e805ea50f8c35850, type: 3}
+  - {fileID: 21300000, guid: 203e2fd66c6d38c4497e8787a9b94403, type: 3}
+  - {fileID: 21300000, guid: 9a68ba2458e93d3409d4be3ecb9dc660, type: 3}
+  - {fileID: 21300000, guid: 68c2c9dd1b6fc2b4e887c09f068b15dc, type: 3}
+  - {fileID: 21300000, guid: b06861f2b6d6a8945af9018cc253056c, type: 3}
+  - {fileID: 21300000, guid: a09b7a81d40d67942adbf777e20cd6d6, type: 3}
+  - {fileID: 21300000, guid: 7b09640c8352ea3498e0d0a98822b2c4, type: 3}
+  tile: {fileID: 1117102410155731924, guid: 31e24bd8229f8a64f85bcb82fcbd047d, type: 3}
+  xSize: 8
+  ySize: 10
+--- !u!4 &992808217
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 992808215}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
