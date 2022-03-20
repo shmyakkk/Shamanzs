@@ -7,7 +7,7 @@ public sealed class ScoreCounter : MonoBehaviour
 {
     public static ScoreCounter Instance { get; private set; }
 
-    private int _score;
+    private int _score = 0;
 
     public int Score
     {
@@ -19,9 +19,10 @@ public sealed class ScoreCounter : MonoBehaviour
 
             _score = value;
 
-            scoreText.SetText($"Score = {_score}");
+            scoreText.SetText(_score.ToString());
         }
     }
+
 
     [SerializeField] private TextMeshProUGUI scoreText;
 

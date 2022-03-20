@@ -7,6 +7,21 @@ public sealed class Tile : MonoBehaviour
     public int x;
     public int y;
 
+    private bool _avaible = true;
+    public bool Avaible 
+    { 
+        get => _avaible; 
+        set
+        {
+            if (value == false)
+            {
+                gameObject.GetComponent<Button>().enabled = false;
+                _avaible = value;
+            }
+        }
+    }
+
+
     private Item _item;
 
     public Item Item
@@ -41,7 +56,6 @@ public sealed class Tile : MonoBehaviour
         Bottom,
     };
 
-
     private void Start() => button.onClick.AddListener(() => Board.Instance.Select(this));
 
     public List<Tile> GetConnectedTiles(List<Tile> exclude = null)
@@ -57,9 +71,9 @@ public sealed class Tile : MonoBehaviour
             exclude.Add(this);
         }
 
-        foreach(var neighbour in Neighbours)
+        foreach (var neighbour in Neighbours)
         {
-            if (neighbour == null || exclude.Contains(neighbour) || neighbour.Item != Item) continue;
+            if (neighbour == null || exclude.Contains(neighbour) || neighbour.Item != Item || !neighbour.Avaible) continue;
 
             result.AddRange(neighbour.GetConnectedTiles(exclude));
         }

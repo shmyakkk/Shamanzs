@@ -39,7 +39,27 @@ public sealed class Board : MonoBehaviour
                 tile.x = x;
                 tile.y = y;
 
-                tile.Item = ItemDatabase.Items[Random.Range(0, ItemDatabase.Items.Length)];
+                
+                var randomItem = ItemDatabase.Items[Random.Range(0, ItemDatabase.Items.Length)];
+
+                if(x > 1)
+                {
+                    if(Tiles[x - 1, y].Item == randomItem)
+                    {
+                        randomItem = Tiles[x - 2, y].Item;
+                    }
+                }
+
+                if (y > 1)
+                {
+                    if (Tiles[x, y - 1].Item == randomItem)
+                    {
+                        randomItem = Tiles[x, y - 2].Item;
+                    }
+                }
+
+                tile.Item = randomItem;
+                
 
                 Tiles[x, y] = tile;
             }
@@ -113,7 +133,8 @@ public sealed class Board : MonoBehaviour
         {
             for (var x = 0; x < Width; x++)
             {
-                if (Tiles[x, y].GetConnectedTiles().Skip(1).Count() >= 2) return true;
+                var tile = Tiles[x, y];
+                if (tile.GetConnectedTiles().Skip(1).Count() >= 2 && tile.Avaible) return true;
             }
         }
         return false;
@@ -126,6 +147,8 @@ public sealed class Board : MonoBehaviour
             for (var x = 0; x < Width; x++)
             {
                 var tile = Tiles[x, y];
+
+                if (!tile.Avaible) continue;
 
                 var connectedTiles = tile.GetConnectedTiles();
 
@@ -146,10 +169,24 @@ public sealed class Board : MonoBehaviour
 
                 foreach (var connectedTile in connectedTiles)
                 {
-                    connectedTile.Item = ItemDatabase.Items[Random.Range(0, ItemDatabase.Items.Length)];
+                    var randomItem = ItemDatabase.Items[Random.Range(0, ItemDatabase.Items.Length)];
+
+                    foreach(var neighbour in connectedTile.Neighbours)
+                    {
+                        if (neighbour == null) continue;
+
+                        if(neighbour.Item == randomItem)
+                        {
+                            randomItem = ItemDatabase.Items[Random.Range(0, ItemDatabase.Items.Length)];
+                        }
+                    }
+
+                    connectedTile.Item = randomItem;
 
                     inflateSequence.Join(connectedTile.icon.transform.DOScale(Vector3.one, TweenDuration));
                 }
+
+
 
                 await inflateSequence.Play()
                                      .AsyncWaitForCompletion();
@@ -158,5 +195,34 @@ public sealed class Board : MonoBehaviour
                 y = 0;
             }
         }
+
+        AppearUnavaibleTile();
+    }
+
+    private async void AppearUnavaibleTile()
+    {
+        var sequence1 = DOTween.Sequence();
+
+        var x = Random.Range(0, Width);
+        var y = Random.Range(0, Height);
+
+        var tile = Tiles[x, y];
+        var icon = tile.icon;
+
+        sequence1.Join(icon.transform.DOScale(Vector3.zero, TweenDuration));
+
+        await sequence1.Play()
+                       .AsyncWaitForCompletion();
+
+        icon.color = Color.black;
+
+        var sequence2 = DOTween.Sequence();
+
+        sequence2.Join(icon.transform.DOScale(Vector3.one, TweenDuration));
+
+        await sequence2.Play()
+                       .AsyncWaitForCompletion();
+
+        tile.Avaible = false;
     }
 }
