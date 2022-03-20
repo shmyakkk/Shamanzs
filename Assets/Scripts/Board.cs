@@ -167,9 +167,35 @@ public sealed class Board : MonoBehaviour
 
                 var inflateSequence = DOTween.Sequence();
 
+
+
                 foreach (var connectedTile in connectedTiles)
                 {
-                    var randomItem = ItemDatabase.Items[Random.Range(0, ItemDatabase.Items.Length)];
+                    var currentTile = connectedTile;
+
+                    for (int i = 0; i < connectedTile.y; i++)
+                    {
+                        if (currentTile.Top == null) continue;
+                        var iconTop = currentTile.Top.icon;
+                        var iconTopTransform = iconTop.transform;
+
+
+                        iconTopTransform.SetParent(currentTile.transform);
+
+                        inflateSequence.Join(iconTopTransform.DOMove(currentTile.icon.transform.position, TweenDuration));
+
+                        currentTile.icon = iconTop;
+                        currentTile.Item = currentTile.Top.Item;
+
+                        if (currentTile.Top.y == 0)
+                        {
+                            currentTile.Top.Item = ItemDatabase.Items[Random.Range(0, ItemDatabase.Items.Length)];
+                        }
+                        if (currentTile.y != 0) currentTile = currentTile.Top;
+                    }
+
+
+                    /*var randomItem = ItemDatabase.Items[Random.Range(0, ItemDatabase.Items.Length)];
 
                     foreach(var neighbour in connectedTile.Neighbours)
                     {
@@ -183,9 +209,8 @@ public sealed class Board : MonoBehaviour
 
                     connectedTile.Item = randomItem;
 
-                    inflateSequence.Join(connectedTile.icon.transform.DOScale(Vector3.one, TweenDuration));
+                    inflateSequence.Join(connectedTile.icon.transform.DOScale(Vector3.one, TweenDuration));*/
                 }
-
 
 
                 await inflateSequence.Play()
@@ -198,6 +223,7 @@ public sealed class Board : MonoBehaviour
 
         AppearUnavaibleTile();
     }
+
 
     private async void AppearUnavaibleTile()
     {
