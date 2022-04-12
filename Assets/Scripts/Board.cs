@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.UI;
 
 public sealed class Board : MonoBehaviour
 {
@@ -23,6 +24,7 @@ public sealed class Board : MonoBehaviour
 
     private const float TweenDuration = 0.25f;
 
+    [SerializeField] private Sprite unavaibleTileImage;
 
     private void Awake() => Instance = this;
 
@@ -74,6 +76,7 @@ public sealed class Board : MonoBehaviour
             if (_selection.Count > 0)
             {
                 if (System.Array.IndexOf(_selection[0].Neighbours, tile) != -1) _selection.Add(tile);
+                else _selection[0] = tile;
             }
             else
             {
@@ -155,8 +158,27 @@ public sealed class Board : MonoBehaviour
                 if (connectedTiles.Skip(1).Count() < 2) continue;
 
                 var deflateSequence = DOTween.Sequence();
+                var inflateSequence = DOTween.Sequence();
 
-                foreach (var connectedTile in connectedTiles) deflateSequence.Join(connectedTile.icon.transform.DOScale(Vector3.zero, TweenDuration));
+
+
+                foreach (var connectedTile in connectedTiles) 
+                {
+                    deflateSequence.Join(connectedTile.icon.transform.DOScale(Vector3.zero, TweenDuration));
+                    foreach (var neighbour in connectedTile.Neighbours)
+                    {
+                        if (neighbour == null) continue;
+                        if (!neighbour.Avaible) 
+                        {
+                            deflateSequence.Join(neighbour.icon.transform.DOScale(Vector3.zero, TweenDuration));
+
+                            neighbour.Avaible = true;
+                            neighbour.Item = ItemDatabase.Items[Random.Range(0, ItemDatabase.Items.Length)];
+
+                            inflateSequence.Join(neighbour.icon.transform.DOScale(Vector3.one, TweenDuration));
+                        }
+                    }
+                }
 
                 audioSource.PlayOneShot(collectSound);
 
@@ -165,7 +187,6 @@ public sealed class Board : MonoBehaviour
                 await deflateSequence.Play()
                                      .AsyncWaitForCompletion();
 
-                var inflateSequence = DOTween.Sequence();
 
                 foreach (var connectedTile in connectedTiles)
                 {
@@ -186,8 +207,6 @@ public sealed class Board : MonoBehaviour
                     inflateSequence.Join(connectedTile.icon.transform.DOScale(Vector3.one, TweenDuration));
                 }
 
-
-
                 await inflateSequence.Play()
                                      .AsyncWaitForCompletion();
 
@@ -196,6 +215,7 @@ public sealed class Board : MonoBehaviour
             }
         }
 
+        AppearUnavaibleTile();
         AppearUnavaibleTile();
     }
 
@@ -207,6 +227,9 @@ public sealed class Board : MonoBehaviour
         var y = Random.Range(0, Height);
 
         var tile = Tiles[x, y];
+
+        if(tile.Avaible == false) return;
+
         var icon = tile.icon;
 
         sequence1.Join(icon.transform.DOScale(Vector3.zero, TweenDuration));
@@ -214,7 +237,7 @@ public sealed class Board : MonoBehaviour
         await sequence1.Play()
                        .AsyncWaitForCompletion();
 
-        icon.color = Color.black;
+        icon.sprite = unavaibleTileImage;
 
         var sequence2 = DOTween.Sequence();
 

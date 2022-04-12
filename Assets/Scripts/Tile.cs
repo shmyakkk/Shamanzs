@@ -13,11 +13,10 @@ public sealed class Tile : MonoBehaviour
         get => _avaible; 
         set
         {
-            if (value == false)
-            {
-                gameObject.GetComponent<Button>().enabled = false;
-                _avaible = value;
-            }
+            if (value == false) gameObject.GetComponent<Button>().enabled = false;
+            else gameObject.GetComponent<Button>().enabled = true;
+
+            _avaible = value;
         }
     }
 
@@ -30,8 +29,6 @@ public sealed class Tile : MonoBehaviour
 
         set
         {
-            if (_item == value) return;
-
             _item = value;
 
             icon.sprite = _item.sprite;
